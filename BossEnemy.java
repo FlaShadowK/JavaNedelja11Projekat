@@ -1,4 +1,3 @@
-package mjau;
 
 public class BossEnemy extends Enemy {
 
@@ -11,6 +10,10 @@ public class BossEnemy extends Enemy {
 
 	public BossEnemy(int x, int y, int width, int height, int damage, int health) {
 		super("Boss", x, y, width, height, damage, health);
+	}
+
+	public BossEnemy(String type, int x, int y, Collidable collider, int damage, int health) {
+		super(type, x, y, collider, damage, health);
 	}
 
 	
@@ -33,13 +36,13 @@ public class BossEnemy extends Enemy {
 	}
 
 	@Override
-	public String toString() {
-		return "Boss" + super.toString() + ", attackDamage=" + getAttackDamage();
+	public String getDamageText() {
+		return getDamage() + "x" + DAMAGE_MULTIPLIER;
 	}
 
 	public static void main(String[] args) {
 		Player p = new Player("Luka", 0, 0, 10, 10, 100);
-		BossEnemy boss = new BossEnemy(5, 5, 20, 20, 15, 200);
+		BossEnemy boss = new BossEnemy(5, 5, 20, 20, 15, 100);
 
 		System.out.println(boss);
 		System.out.println(boss.attack(p) + " -> HP=" + p.getHealth());  

@@ -1,25 +1,23 @@
-package mjau;
 
-public class GameObject {
+public abstract class GameObject {
 
 	private int x;
 	private int y;
-	private int width;
-	private int height;
+	private Collidable collider;
 
 	public GameObject() {
-		this.x = 0;
-		this.y = 0;
-		this.width = 0;
-		this.height = 0;
+		this(0, 0, 1, 1);
 	}
 
 	public GameObject(int x, int y, int width, int height) {
+		this(x, y, new RectangleCollider(width, height));
+	}
+
+	public GameObject(int x, int y, Collidable collider) {
 		super();
 		this.x = x;
 		this.y = y;
-		this.width = width;
-		this.height = height;
+		setCollider(collider);
 	}
 
 	public int getX() {
@@ -38,38 +36,41 @@ public class GameObject {
 		this.y = y;
 	}
 
-	public int getWidth() {
-		return width;
+	public Collidable getCollider() {
+		return collider;
 	}
 
-	public void setWidth(int width) {
-		this.width = width;
+	public void setCollider(Collidable collider) {
+		if (collider == null) {
+			throw new IllegalArgumentException("Kolajder ne smije biti null.");
+		}
+		this.collider = collider;
+	}
+
+	public int getWidth() {
+		return collider.getWidth();
 	}
 
 	public int getHeight() {
-		return height;
+		return collider.getHeight();
 	}
 
-	public void setHeight(int height) {
-		this.height = height;
-	}
+	public abstract String getDisplayName();
 
 	public boolean intersects(GameObject other) {
-		return this.x < other.x + other.width
-				&& this.x + this.width > other.x
-				&& this.y < other.y + other.height
-				&& this.y + this.height > other.y;
+		return collider.intersects(x, y, other.collider, other.x, other.y);
 	}
 
 	@Override
 	public String toString() {
-		return "GameObject @ (" + x + "," + y + ") " + width + "x" + height;
+		return "GameObject @ (" + x + "," + y + ") " + getWidth() + "x" + getHeight();
 	}
 
 	public static void main(String[] args) {
-		GameObject a = new GameObject(0, 0, 10, 10);
-		GameObject b = new GameObject(5, 5, 10, 10);
-		GameObject c = new GameObject(20, 20, 5, 5);
+		GameObject a = new Enemy("Goblin", 0, 0, 10, 10, 5);
+		GameObject b = new Enemy("Orc", 5, 5, 10, 10, 15);
+		GameObject c = new Player("Luka", 20, 20, 5, 5, 100);
+		c.setCollider(new SquareCollider(5));
 
 		System.out.println(a);                 
 		System.out.println(a.intersects(b));   

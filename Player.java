@@ -1,31 +1,25 @@
-package mjau;
 
 public class Player extends GameObject {
 	
 	private String name;
-	private int x;
-	private int y;
-	private int width;
-	private int height;
 	private int health;
 	
 	public Player() {
-		this.name = "default";
-		this.x = 0;
-		this.y = 0;
-		this.width = 0;
-		this.height = 0;
+		super();
+		this.name = "Default";
 		this.health = 1;
 	}
 	
 	public Player(String name, int x, int y, int width, int height, int health) {
-		super();
-		this.name = name;
-		this.x = x;
-		this.y = y;
-		this.width = width;
-		this.height = height;
-		this.health = health;
+		super(x, y, width, height);
+		setName(name);
+		setHealth(health);
+	}
+
+	public Player(String name, int x, int y, Collidable collider, int health) {
+		super(x, y, collider);
+		setName(name);
+		setHealth(health);
 	}
 
 	public String getName() {
@@ -33,48 +27,18 @@ public class Player extends GameObject {
 	}
 
 	public void setName(String name) {
-		if(name.isEmpty()) {
-			System.out.println("Ponovo unesite ime: ");
-		}else if(name.charAt(0) >= 'a' && name.charAt(0) <= 'z') {
-			System.out.println("Svaka rijec mora poceti velikim slovom. ");
-		
+		if(name == null || name.trim().isEmpty()) {
+			throw new IllegalArgumentException("Ime ne smije biti prazno.");
+		}else if(!Character.isLetter(name.trim().charAt(0))) {
+			throw new IllegalArgumentException("Ime mora poceti slovom: " + name);
 		}else {
-			name.trim();
-			this.name = name;
+			this.name = normalizeName(name);
 		}
-		
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-
-	public int getWidth() {
-		return width;
-	}
-
-	public void setWidth(int width) {
-		this.width = width;
-	}
-
-	public int getHeight() {
-		return height;
-	}
-
-	public void setHeight(int height) {
-		this.height = height;
+	@Override
+	public String getDisplayName() {
+		return name;
 	}
 
 	public int getHealth() {
@@ -82,13 +46,15 @@ public class Player extends GameObject {
 	}
 
 	public void setHealth(int health) {
-		if(health > 0 && health <= 100)
+		if(health < 0 || health > 100) {
+			throw new IllegalArgumentException("Health mora biti u opsegu od 0 do 100: " + health);
+		}
 		this.health = health;
 	}
 
 	@Override
 	public String toString() {
-		return "Player [name=" + name + "] @  (" + x + ", " + y + ") " + width + " X " + height
+		return "Player [name=" + name + "] @  (" + getX() + ", " + getY() + ") " + getWidth() + " X " + getHeight()
 				+ ", health=" + health + "]";
 	}
 	

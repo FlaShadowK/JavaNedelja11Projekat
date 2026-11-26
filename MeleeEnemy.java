@@ -1,4 +1,3 @@
-package mjau;
 
 public class MeleeEnemy extends Enemy {
 
@@ -9,6 +8,10 @@ public class MeleeEnemy extends Enemy {
 
 	public MeleeEnemy(int x, int y, int width, int height, int damage, int health) {
 		super("Melee", x, y, width, height, damage, health);
+	}
+
+	public MeleeEnemy(String type, int x, int y, Collidable collider, int damage, int health) {
+		super(type, x, y, collider, damage, health);
 	}
 
 	
@@ -26,18 +29,13 @@ public class MeleeEnemy extends Enemy {
 		return true;
 	}
 
-	@Override
-	public String toString() {
-		return "Melee" + super.toString();
-	}
-
 	public static void main(String[] args) {
-		Player p = new Player("marko", 0, 0, 10, 10, 100);
+		Player p = new Player("Marko", 0, 0, 10, 10, 100);
 		MeleeEnemy near = new MeleeEnemy(5, 5, 10, 10, 15, 50);
 		MeleeEnemy far = new MeleeEnemy(50, 50, 10, 10, 15, 50);
 
-		System.out.println(near.attack(p) + " -> HP=" + p.getHealth());  // true -> HP=85
-		System.out.println(far.attack(p) + " -> HP=" + p.getHealth());   // false -> HP=85
+		System.out.println(near.attack(p) + " -> HP=" + p.getHealth());  
+		System.out.println(far.attack(p) + " -> HP=" + p.getHealth());  
 	}
 
 }
